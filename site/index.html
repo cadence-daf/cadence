@@ -68,7 +68,6 @@
 
   .install ol { padding-left: 20px; margin: 0; }
   .install li { margin-bottom: 8px; }
-  .digest { word-break: break-all; font-size: 0.8rem; color: var(--muted); }
   code { background: var(--surface); padding: 2px 6px; border-radius: 6px; }
 
   footer { padding: 32px 0 48px; color: var(--muted); font-size: 0.9rem; text-align: center; border-top: 1px solid var(--border); }
@@ -143,8 +142,6 @@
       <li>Open the file. If Android asks, allow installs from your browser or file manager.</li>
       <li>Tap Install, then open Cadence.</li>
     </ol>
-    <p class="meta">Checksum (SHA-256) of <span id="sumname">cadence-0.4.0.apk</span>:</p>
-    <p class="digest"><code id="sum">8dec3431c31dcf7942ac6817c2ddf60a1238a23f7fd8673053a02e2e69732bfd</code></p>
   </section>
 
   <section>
@@ -159,7 +156,7 @@
   <p><a href="https://github.com/cadence-daf/cadence/blob/main/PRIVACY.md">Privacy policy</a> · <a href="https://github.com/cadence-daf/cadence/blob/main/LICENSE">License (GPL-3.0)</a> · <a href="https://github.com/cadence-daf/cadence/issues">Report an issue</a> · <a href="https://github.com/cadence-daf/cadence">Source on GitHub</a></p>
 </footer>
 <script>
-// Fills the download button, size, notes link and checksum from the latest GitHub release.
+// Fills the download button, size and notes link from the latest GitHub release.
 // If the request fails, the values already in the page (the last release at publish time) stay.
 fetch("https://api.github.com/repos/cadence-daf/cadence/releases/latest")
   .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
@@ -171,8 +168,6 @@ fetch("https://api.github.com/repos/cadence-daf/cadence/releases/latest")
     dl.textContent = "Download the APK (" + rel.tag_name + ")";
     document.getElementById("size").textContent = (a.size / 1048576).toFixed(1) + " MB";
     document.getElementById("notes").href = rel.html_url;
-    document.getElementById("sumname").textContent = a.name;
-    document.getElementById("sum").textContent = a.digest ? a.digest.replace("sha256:", "") : "See the release page";
   })
   .catch(function () {});
 </script>
