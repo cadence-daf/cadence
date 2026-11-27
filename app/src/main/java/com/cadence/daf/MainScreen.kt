@@ -80,6 +80,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -564,10 +565,15 @@ private fun PitchSection(pitchSemitones: Int, onPitchChange: (Int) -> Unit) {
 private const val VOLUME_RED_DB = 6
 private val VolumeYellow = Color(0xFFE8B931)
 private val VolumeRed = Color(0xFFEF5350)
+private val VolumeYellowOnLight = Color(0xFF8A5300)
 
 @Composable
 private fun VolumeSection(outputGainDb: Int, onVolumeChange: (Int) -> Unit) {
     val label = stringResource(R.string.volume_label, outputGainDb)
+    val colors = MaterialTheme.colorScheme
+    val light = colors.background.luminance() > 0.5f
+    val yellow = if (light) VolumeYellowOnLight else VolumeYellow
+    val red = if (light) colors.error else VolumeRed
     Text(label, style = MaterialTheme.typography.titleMedium)
     CadenceSlider(
         value = outputGainDb.toFloat(),
@@ -576,8 +582,8 @@ private fun VolumeSection(outputGainDb: Int, onVolumeChange: (Int) -> Unit) {
         steps = 41,
         modifier = Modifier.semantics { contentDescription = label },
         accent = when {
-            outputGainDb > VOLUME_RED_DB -> VolumeRed
-            outputGainDb > 0 -> VolumeYellow
+            outputGainDb > VOLUME_RED_DB -> red
+            outputGainDb > 0 -> yellow
             else -> null
         }
     )
@@ -586,7 +592,7 @@ private fun VolumeSection(outputGainDb: Int, onVolumeChange: (Int) -> Unit) {
         Text(
             stringResource(R.string.volume_warning),
             style = MaterialTheme.typography.bodySmall,
-            color = if (outputGainDb > VOLUME_RED_DB) VolumeRed else VolumeYellow
+            color = if (outputGainDb > VOLUME_RED_DB) red else yellow
         )
     }
 }

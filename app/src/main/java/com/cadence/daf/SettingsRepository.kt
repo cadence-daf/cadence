@@ -45,6 +45,7 @@ class SettingsRepository(context: Context) {
             maskingEnabled = prefs[MASKING_ENABLED] ?: defaults.maskingEnabled,
             maskingDb = clampMaskingDb(prefs[MASKING_DB] ?: defaults.maskingDb),
             noiseReduction = prefs[NOISE_REDUCTION] ?: defaults.noiseReduction,
+            lightMode = prefs[LIGHT_MODE] ?: defaults.lightMode,
             widgetStyle = WidgetStyle(
                 clampWidgetAccent(prefs[WIDGET_ACCENT] ?: defaults.widgetStyle.accent),
                 prefs[WIDGET_LIGHT] ?: defaults.widgetStyle.light,
@@ -55,6 +56,10 @@ class SettingsRepository(context: Context) {
 
     suspend fun setNoiseReduction(enabled: Boolean) {
         store.edit { it[NOISE_REDUCTION] = enabled }
+    }
+
+    suspend fun setLightMode(enabled: Boolean) {
+        store.edit { it[LIGHT_MODE] = enabled }
     }
 
     suspend fun setWidgetStyle(style: WidgetStyle) {
@@ -220,6 +225,7 @@ class SettingsRepository(context: Context) {
         val NOISE_REDUCTION = booleanPreferencesKey("noise_reduction")
         val MASKING_ENABLED =booleanPreferencesKey("masking_enabled")
         val MASKING_DB = intPreferencesKey("masking_db")
+        val LIGHT_MODE = booleanPreferencesKey("light_mode")
         val WIDGET_ACCENT = intPreferencesKey("widget_accent")
         val WIDGET_LIGHT = booleanPreferencesKey("widget_light")
         val WIDGET_OPACITY = intPreferencesKey("widget_opacity")

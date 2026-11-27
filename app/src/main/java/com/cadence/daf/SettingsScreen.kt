@@ -82,7 +82,10 @@ fun SettingsScreen(viewModel: MainViewModel, onBack: () -> Unit, openDebug: () -
         }
         SectionCard { ReminderSection(settings, viewModel) }
 
-        GroupTitle(R.string.group_widgets)
+        GroupTitle(R.string.group_appearance)
+        SectionCard {
+            SwitchRow(R.string.light_switch, R.string.light_caption, settings.lightMode, viewModel::setLightMode)
+        }
         SectionCard { WidgetSection(settings.widgetStyle, viewModel::setWidgetStyle) }
 
         GroupTitle(R.string.about)

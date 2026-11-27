@@ -164,6 +164,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch { repository.setNoiseReduction(enabled) }
     }
 
+    fun setLightMode(enabled: Boolean) {
+        viewModelScope.launch { repository.setLightMode(enabled) }
+    }
+
     fun setWidgetStyle(style: WidgetStyle) {
         viewModelScope.launch { repository.setWidgetStyle(style) }
     }

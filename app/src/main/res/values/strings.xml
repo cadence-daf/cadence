@@ -145,7 +145,9 @@
     <string name="widget_practice_description">Start or stop practice with one tap.</string>
     <string name="widget_week_name">Practice week</string>
     <string name="widget_week_description">Start or stop practice, see the last 7 days and change the delay.</string>
-    <string name="group_widgets">Widgets</string>
+    <string name="group_appearance">Appearance</string>
+    <string name="light_switch">Light mode</string>
+    <string name="light_caption">A light screen with a blue accent. Widgets have their own colors below.</string>
     <string name="widget_appearance">Widget appearance</string>
     <string name="widget_appearance_caption">Applies to every Cadence widget on your home screen.</string>
     <string name="widget_accent">Accent color</string>

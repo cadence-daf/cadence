@@ -26,6 +26,7 @@ data class Settings(
     val maskingDb: Int = -25,
     val noiseReduction: Boolean = false,
     val widgetStyle: WidgetStyle = WidgetStyle(),
+    val lightMode: Boolean = false,
 ) {
     /** The value for nativeSetMaskingDb: the level, or MASKING_OFF_DB when masking is off. */
     val engineMaskingDb: Int get() = if (maskingEnabled) maskingDb else MASKING_OFF_DB

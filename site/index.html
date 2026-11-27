@@ -16,6 +16,18 @@
     --accent: #7FD3C6;
     --accent-text: #0F1416;
     --border: #2A3739;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #F7F5F0;
+    --surface: #ECEAE4;
+    --surface-high: #E6E4DE;
+    --text: #1B1D1E;
+    --muted: #41494B;
+    --accent: #1A5BB8;
+    --accent-text: #FFFFFF;
+    --border: #C4CACB;
+    color-scheme: light;
   }
   * { box-sizing: border-box; }
   html, body { background: var(--bg); }
@@ -45,7 +57,14 @@
     border-radius: 999px;
     font-size: 1.05rem;
   }
-  .btn:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .theme-toggle {
+    position: absolute; top: 16px; right: 16px;
+    min-height: 44px; padding: 0 16px;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 999px;
+    font: inherit; font-size: 0.9rem; cursor: pointer;
+  }
+  .btn:focus-visible, a:focus-visible, .theme-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
   .meta { color: var(--muted); font-size: 0.9rem; margin-top: 14px; }
   a { color: var(--accent); }
 
@@ -77,8 +96,13 @@
     .shots img { height: 340px; }
   }
 </style>
+<script>
+// Applied before the page paints. Dark unless this browser chose light earlier.
+try { if (localStorage.getItem("theme") === "light") document.documentElement.setAttribute("data-theme", "light"); } catch (e) {}
+</script>
 </head>
 <body>
+<button class="theme-toggle" id="theme" type="button" hidden></button>
 <main>
 
   <header class="hero">
@@ -155,6 +179,23 @@
   <p>This page has no analytics, no cookies and no trackers either.</p>
   <p><a href="https://github.com/cadence-daf/cadence/blob/main/PRIVACY.md">Privacy policy</a> · <a href="https://github.com/cadence-daf/cadence/blob/main/LICENSE">License (GPL-3.0)</a> · <a href="https://github.com/cadence-daf/cadence/issues">Report an issue</a> · <a href="https://github.com/cadence-daf/cadence">Source on GitHub</a></p>
 </footer>
+<script>
+// Light and dark switch. The choice stays in this browser and is never sent anywhere.
+(function () {
+  var button = document.getElementById("theme");
+  var root = document.documentElement;
+  function light() { return root.getAttribute("data-theme") === "light"; }
+  function label() { button.textContent = light() ? "Dark mode" : "Light mode"; }
+  button.addEventListener("click", function () {
+    var next = light() ? "dark" : "light";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+    label();
+  });
+  label();
+  button.hidden = false;
+})();
+</script>
 <script>
 // Fills the download button, size and notes link from the latest GitHub release.
 // If the request fails, the values already in the page (the last release at publish time) stay.
