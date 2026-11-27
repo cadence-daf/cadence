@@ -1,0 +1,1 @@
+Light mode: switch it on under Settings > Appearance for a light screen with a blue accent. Dark stays the default.
