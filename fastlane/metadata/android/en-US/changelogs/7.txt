@@ -1,0 +1,1 @@
+Home screen widgets: a one-cell Start/Stop button and a weekly view with your last 7 days and a delay button. Start and stop practice without opening the app. Pick the widget color, a light or dark background and its opacity under Settings > Widgets.
