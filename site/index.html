@@ -47,16 +47,21 @@
   .tagline { font-size: 1.25rem; color: var(--muted); margin: 0 0 24px; }
   .lead { font-size: 1.1rem; max-width: 560px; margin: 0 auto 32px; }
 
-  .btn {
-    display: inline-block;
-    background: var(--accent);
-    color: var(--accent-text);
-    text-decoration: none;
-    font-weight: 600;
-    padding: 14px 28px;
-    border-radius: 999px;
-    font-size: 1.05rem;
+  .get { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .store {
+    display: flex; align-items: center; gap: 14px;
+    width: 300px; max-width: 100%; padding: 12px 20px;
+    border: 1px solid var(--accent); border-radius: 16px;
+    background: var(--surface); color: var(--text);
+    text-decoration: none; text-align: left; line-height: 1.35;
   }
+  .store.primary { background: var(--accent); color: var(--accent-text); }
+  .store svg {
+    width: 28px; height: 28px; flex: 0 0 auto;
+    fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .store b { display: block; font-size: 1.02rem; }
+  .store small { display: block; font-size: 0.85rem; }
   .theme-toggle {
     position: absolute; top: 16px; right: 16px;
     min-height: 44px; padding: 0 16px;
@@ -64,7 +69,7 @@
     border: 1px solid var(--border); border-radius: 999px;
     font: inherit; font-size: 0.9rem; cursor: pointer;
   }
-  .btn:focus-visible, a:focus-visible, .theme-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  a:focus-visible, .theme-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
   .meta { color: var(--muted); font-size: 0.9rem; margin-top: 14px; }
   a { color: var(--accent); }
 
@@ -85,8 +90,13 @@
   ul.features { padding-left: 20px; margin: 0; }
   ul.features li { margin: 0 0 10px; }
 
+  .ways { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .way { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; min-width: 0; }
+  .way h3 { margin: 0 0 10px; font-size: 1.1rem; }
+  .way p { margin: 0 0 12px; color: var(--muted); font-size: 0.95rem; }
   .install ol { padding-left: 20px; margin: 0; }
   .install li { margin-bottom: 8px; }
+  .way code { background: var(--bg); overflow-wrap: anywhere; }
   code { background: var(--surface); padding: 2px 6px; border-radius: 6px; }
 
   footer { padding: 32px 0 48px; color: var(--muted); font-size: 0.9rem; text-align: center; border-top: 1px solid var(--border); }
@@ -110,9 +120,43 @@ try { if (localStorage.getItem("theme") === "light") document.documentElement.se
     <h1>Cadence</h1>
     <p class="tagline">Privacy-focused delayed auditory feedback for Android</p>
     <p class="lead">Cadence plays your own voice back to you through wired earbuds, a fraction of a second late. Practise on the go, anywhere.</p>
-    <a class="btn" id="dl" href="https://github.com/cadence-daf/cadence/releases/download/v0.4.0/cadence-0.4.0.apk" download>Download the APK (v0.4.0)</a>
-    <p class="meta">Android 8.0 or newer · <span id="size">7.4 MB</span> · <a id="notes" href="https://github.com/cadence-daf/cadence/releases/tag/v0.4.0">release notes</a></p>
+    <div class="get">
+      <a class="store primary" id="dl" href="https://github.com/cadence-daf/cadence/releases/download/v0.5.1/cadence-0.5.1.apk" download>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
+        <span><b id="dl-label">Download the APK (v0.5.1)</b><small>Straight from GitHub</small></span>
+      </a>
+      <a class="store" href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cadence-daf/cadence">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 3v5h5M4 13a8 8 0 0 0 14.5 4.5L20 16M20 21v-5h-5"/></svg>
+        <span><b>Add to Obtainium</b><small>Shows you new versions</small></span>
+      </a>
+    </div>
+    <p class="meta">Android 8.0 or newer · <span id="size">7.4 MB</span> · <a id="notes" href="https://github.com/cadence-daf/cadence/releases/tag/v0.5.1">release notes</a> · <a href="#install">how to install</a></p>
   </header>
+
+  <section class="install" id="install">
+    <h2>Install</h2>
+    <p>You need earbuds with a microphone. Wired earbuds are recommended, because Bluetooth adds a much longer delay on top of the one you set.</p>
+    <div class="ways">
+      <div class="way">
+        <h3>Direct download</h3>
+        <p>One file from GitHub. Download it again when you want a newer version.</p>
+        <ol>
+          <li>On your phone, tap <strong>Download the APK</strong> above.</li>
+          <li>Open the file. If Android asks, allow installs from your browser or file manager.</li>
+          <li>Tap Install, then open Cadence.</li>
+        </ol>
+      </div>
+      <div class="way">
+        <h3>With Obtainium</h3>
+        <p><a href="https://github.com/ImranR98/Obtainium">Obtainium</a> is a free, open-source app from another developer. It installs apps from their GitHub releases and shows you when a new version is out.</p>
+        <ol>
+          <li>Install Obtainium from its <a href="https://github.com/ImranR98/Obtainium/releases/latest">latest release</a>.</li>
+          <li>Tap <strong>Add to Obtainium</strong> above, then tap Add. Or, in Obtainium, tap Add app, paste <code>https://github.com/cadence-daf/cadence</code> in App source URL, then tap Add.</li>
+          <li>Tap Install. If Android asks, allow installs from Obtainium.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
 
   <section>
     <h2>Private by design</h2>
@@ -158,23 +202,6 @@ try { if (localStorage.getItem("theme") === "light") document.documentElement.se
     </div>
   </section>
 
-  <section class="install">
-    <h2>Install</h2>
-    <p>You need earbuds with a microphone. Wired earbuds are recommended, because Bluetooth adds a much longer delay on top of the one you set. Open the APK on your phone and follow these steps:</p>
-    <ol>
-      <li>Download the APK with the button above.</li>
-      <li>Open the file. If Android asks, allow installs from your browser or file manager.</li>
-      <li>Tap Install, then open Cadence.</li>
-    </ol>
-    <h3>Get updates with Obtainium (optional)</h3>
-    <p><a href="https://github.com/ImranR98/Obtainium">Obtainium</a> is a free, open-source app from another developer. It installs apps from their GitHub releases and shows you when a new version is out.</p>
-    <ol>
-      <li>Install Obtainium from its <a href="https://github.com/ImranR98/Obtainium/releases/latest">latest release</a>.</li>
-      <li>In Obtainium, tap Add app, paste <code>https://github.com/cadence-daf/cadence</code> in App source URL, then tap Add.</li>
-      <li>Tap Install. If Android asks, allow installs from Obtainium.</li>
-    </ol>
-  </section>
-
   <section>
     <h2>Open source</h2>
     <p>Cadence is free software under the <a href="https://github.com/cadence-daf/cadence/blob/main/LICENSE">GNU GPL v3.0</a>. You can read every line, build it yourself, or report an issue on <a href="https://github.com/cadence-daf/cadence">GitHub</a>.</p>
@@ -213,7 +240,7 @@ fetch("https://api.github.com/repos/cadence-daf/cadence/releases/latest")
     if (!a) return;
     var dl = document.getElementById("dl");
     dl.href = a.browser_download_url;
-    dl.textContent = "Download the APK (" + rel.tag_name + ")";
+    document.getElementById("dl-label").textContent = "Download the APK (" + rel.tag_name + ")";
     document.getElementById("size").textContent = (a.size / 1048576).toFixed(1) + " MB";
     document.getElementById("notes").href = rel.html_url;
   })

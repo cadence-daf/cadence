@@ -6,6 +6,19 @@
 
 Cadence is an Android app that plays your own voice back to you with a short delay, for speech practice.
 
+## Install
+
+<p align="center">
+  <a href="https://github.com/cadence-daf/cadence/releases/latest"><img src=".github/badges/download-apk.svg" width="260" alt="Download the APK from GitHub"></a>
+  &nbsp;
+  <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cadence-daf/cadence"><img src=".github/badges/obtainium.svg" width="260" alt="Add to Obtainium"></a>
+</p>
+
+- **Direct download:** on your phone, download the `.apk` file from the [latest release](https://github.com/cadence-daf/cadence/releases/latest) and open it. If Android asks, allow installs from your browser or file manager.
+- **With Obtainium:** install [Obtainium](https://github.com/ImranR98/Obtainium), a free app from another developer, then tap the button above on your phone and tap Add. It shows you when a new version is out.
+
+You need Android 8.0 or newer and earbuds with a microphone. Wired earbuds are recommended.
+
 <p align="center"><b>Private by design: free, no ads, no analytics, no accounts, no internet access.<br>Everything stays on your phone and never leaves it.</b></p>
 
 - **No ads, ever.** Free and open source (GPL-3.0).
