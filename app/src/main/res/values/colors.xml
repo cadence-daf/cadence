@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="brand_teal">#1F5F66</color>
+    <!-- Widget colors before their first redraw; afterwards Widgets.kt applies the user's choice. -->
+    <color name="widget_background">#0F1416</color>
+    <color name="widget_primary">#7FD3C6</color>
+    <color name="widget_on_surface">#E8EEEC</color>
 </resources>

@@ -45,11 +45,24 @@ class SettingsRepository(context: Context) {
             maskingEnabled = prefs[MASKING_ENABLED] ?: defaults.maskingEnabled,
             maskingDb = clampMaskingDb(prefs[MASKING_DB] ?: defaults.maskingDb),
             noiseReduction = prefs[NOISE_REDUCTION] ?: defaults.noiseReduction,
+            widgetStyle = WidgetStyle(
+                clampWidgetAccent(prefs[WIDGET_ACCENT] ?: defaults.widgetStyle.accent),
+                prefs[WIDGET_LIGHT] ?: defaults.widgetStyle.light,
+                clampWidgetOpacity(prefs[WIDGET_OPACITY] ?: defaults.widgetStyle.opacity),
+            ),
         )
     }
 
     suspend fun setNoiseReduction(enabled: Boolean) {
         store.edit { it[NOISE_REDUCTION] = enabled }
+    }
+
+    suspend fun setWidgetStyle(style: WidgetStyle) {
+        store.edit {
+            it[WIDGET_ACCENT] = clampWidgetAccent(style.accent)
+            it[WIDGET_LIGHT] = style.light
+            it[WIDGET_OPACITY] = clampWidgetOpacity(style.opacity)
+        }
     }
 
     suspend fun setMaskingEnabled(enabled: Boolean) {
@@ -207,6 +220,9 @@ class SettingsRepository(context: Context) {
         val NOISE_REDUCTION = booleanPreferencesKey("noise_reduction")
         val MASKING_ENABLED =booleanPreferencesKey("masking_enabled")
         val MASKING_DB = intPreferencesKey("masking_db")
+        val WIDGET_ACCENT = intPreferencesKey("widget_accent")
+        val WIDGET_LIGHT = booleanPreferencesKey("widget_light")
+        val WIDGET_OPACITY = intPreferencesKey("widget_opacity")
         val SESSION_LIMIT_MIN =intPreferencesKey("session_limit_min")
         val PRESETS = List(PRESET_SLOTS) { stringPreferencesKey("preset_${it + 1}") }
         val PRESET_NAMES = List(PRESET_SLOTS) { stringPreferencesKey("preset_name_${it + 1}") }

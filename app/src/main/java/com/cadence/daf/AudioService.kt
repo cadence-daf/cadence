@@ -1,5 +1,6 @@
 package com.cadence.daf
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,6 +8,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
@@ -14,6 +16,7 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
@@ -31,6 +34,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
@@ -50,6 +54,7 @@ class AudioService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_START -> startAudio(intent)
+            ACTION_QUICK_START -> quickStart()
             ACTION_STOP -> shutDown()
             ACTION_TOGGLE_MUTE -> toggleMute()
             ACTION_NEXT_DELAY -> scope.launch { repository.setDelayMs(nextDelayPreset(repository.settings.first().delayMs)) }
@@ -127,6 +132,27 @@ class AudioService : Service() {
         }
     }
 
+    // Start from a widget, with no screen open: the checks the Start button makes, answered with a Toast.
+    private fun quickStart() {
+        if (_running.value) return
+        val headset = HeadsetMonitor(this).run { close(); state.value }
+        val outputId = headset.wiredOutputId
+        val allowed = checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (!allowed || outputId == null) {
+            toast(getString(if (!allowed) R.string.mic_denied else R.string.plug_in_to_start))
+            // Redraw, so that without the permission the next tap opens the app and asks for it.
+            Widgets.refresh(this)
+            stopSelf()
+            return
+        }
+        // One small preferences read; blocking keeps startForeground inside this call.
+        val preset = runBlocking { repository.settings.first().micPreset }
+        startAudio(startIntent(this, preset, headset.headsetInputId ?: 0, outputId, headset.headsetInputIsBluetooth))
+        _lastError.value?.let(::toast)
+    }
+
+    private fun toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+
     // A call or another app taking the sound stops practice, like unplugging does.
     private fun requestFocus(): Boolean {
         val attributes = AudioAttributes.Builder()
@@ -156,6 +182,7 @@ class AudioService : Service() {
 
     private fun refreshNotification() {
         getSystemService(NotificationManager::class.java).notify(NOTIFICATION_ID, buildNotification())
+        Widgets.refresh(this)
     }
 
     private fun actionIntent(action: String, requestCode: Int) = PendingIntent.getService(
@@ -193,6 +220,7 @@ class AudioService : Service() {
         abandonFocus()
         if (_running.value) logPractice()
         _running.value = false
+        Widgets.refresh(this)
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -203,6 +231,7 @@ class AudioService : Service() {
         val line = "${LocalDate.now()},$seconds"
         logScope.launch {
             withContext(NonCancellable + Dispatchers.IO) { practiceLog.append(line) }
+            Widgets.refresh(applicationContext)
             _sessionLogged.emit(seconds)
         }
     }
@@ -234,6 +263,7 @@ class AudioService : Service() {
 
     companion object {
         private const val ACTION_START = "com.cadence.daf.action.START"
+        private const val ACTION_QUICK_START = "com.cadence.daf.action.QUICK_START"
         private const val ACTION_STOP = "com.cadence.daf.action.STOP"
         private const val ACTION_TOGGLE_MUTE = "com.cadence.daf.action.TOGGLE_MUTE"
         private const val ACTION_NEXT_DELAY = "com.cadence.daf.action.NEXT_DELAY"
@@ -262,17 +292,24 @@ class AudioService : Service() {
         val lastError: StateFlow<String?> = _lastError.asStateFlow()
 
         fun start(context: Context, preset: Int, inputId: Int, outputId: Int, callLink: Boolean) {
-            val intent = Intent(context, AudioService::class.java)
+            ContextCompat.startForegroundService(context, startIntent(context, preset, inputId, outputId, callLink))
+        }
+
+        private fun startIntent(context: Context, preset: Int, inputId: Int, outputId: Int, callLink: Boolean) =
+            Intent(context, AudioService::class.java)
                 .setAction(ACTION_START)
                 .putExtra(EXTRA_PRESET, preset)
                 .putExtra(EXTRA_INPUT_ID, inputId)
                 .putExtra(EXTRA_OUTPUT_ID, outputId)
                 .putExtra(EXTRA_CALL_LINK, callLink)
-            ContextCompat.startForegroundService(context, intent)
-        }
+
+        fun quickStartIntent(context: Context): Intent =
+            Intent(context, AudioService::class.java).setAction(ACTION_QUICK_START)
 
         fun stop(context: Context) {
-            context.startService(Intent(context, AudioService::class.java).setAction(ACTION_STOP))
+            context.startService(stopIntent(context))
         }
+
+        fun stopIntent(context: Context): Intent = Intent(context, AudioService::class.java).setAction(ACTION_STOP)
     }
 }

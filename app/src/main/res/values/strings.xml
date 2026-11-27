@@ -141,5 +141,23 @@
     <string name="calibrating">Stay quiet for 3 seconds…</string>
     <string name="calibrate_caption">Works while practice is running. Stay quiet and it sets the sensitivity from the noise around you.</string>
     <string name="ok">OK</string>
+    <string name="widget_practice_name">Practice button</string>
+    <string name="widget_practice_description">Start or stop practice with one tap.</string>
+    <string name="widget_week_name">Practice week</string>
+    <string name="widget_week_description">Start or stop practice, see the last 7 days and change the delay.</string>
+    <string name="group_widgets">Widgets</string>
+    <string name="widget_appearance">Widget appearance</string>
+    <string name="widget_appearance_caption">Applies to every Cadence widget on your home screen.</string>
+    <string name="widget_accent">Accent color</string>
+    <string name="widget_background_title">Background</string>
+    <string name="widget_dark">Dark</string>
+    <string name="widget_light">Light</string>
+    <string name="widget_opacity">Background opacity: %1$d%%</string>
+    <string name="color_teal">Teal</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_violet">Violet</string>
+    <string name="color_amber">Amber</string>
+    <string name="color_rose">Rose</string>
+    <string name="color_plain">Plain</string>
     <string name="goal_caption">Minutes of practice per day. A guide, not a rule.</string>
 </resources>

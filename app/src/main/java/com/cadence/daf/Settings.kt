@@ -25,6 +25,7 @@ data class Settings(
     val maskingEnabled: Boolean = false,
     val maskingDb: Int = -25,
     val noiseReduction: Boolean = false,
+    val widgetStyle: WidgetStyle = WidgetStyle(),
 ) {
     /** The value for nativeSetMaskingDb: the level, or MASKING_OFF_DB when masking is off. */
     val engineMaskingDb: Int get() = if (maskingEnabled) maskingDb else MASKING_OFF_DB
@@ -35,6 +36,13 @@ data class Settings(
 }
 
 const val MASKING_OFF_DB = -100
+
+/** Look of the home screen widgets: index into WidgetAccent, light or dark, background opacity in percent. */
+data class WidgetStyle(val accent: Int = 0, val light: Boolean = false, val opacity: Int = 100)
+
+fun clampWidgetAccent(index: Int): Int = if (index in WidgetAccent.entries.indices) index else 0
+
+fun clampWidgetOpacity(percent: Int): Int = percent.coerceIn(0, 100)
 
 fun clampMaskingDb(db: Int): Int = db.coerceIn(-40, -10)
 

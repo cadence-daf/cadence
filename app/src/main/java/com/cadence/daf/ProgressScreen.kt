@@ -1,5 +1,7 @@
 package com.cadence.daf
 
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.size
 import android.content.Intent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -309,23 +311,33 @@ private fun TrendChart(dayMinutes: Map<LocalDate, Int>, goal: Int) {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun MinuteChips(choices: List<Int>, goal: Int, onSelect: (Int) -> Unit) {
+    ChoiceChips(choices, goal, { stringResource(if (it == 0) R.string.goal_off else R.string.goal_minutes, it) }, onSelect)
+}
+
+/** One selected chip out of [choices]: border and check mark. [dot] shows a color on the other chips. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+internal fun <T> ChoiceChips(
+    choices: List<T>,
+    current: T,
+    label: @Composable (T) -> String,
+    onSelect: (T) -> Unit,
+    dot: ((T) -> Color)? = null
+) {
     val colors = MaterialTheme.colorScheme
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         choices.forEach { choice ->
-            val selected = choice == goal
+            val selected = choice == current
             FilterChip(
                 selected = selected,
                 onClick = { onSelect(choice) },
-                label = {
-                    Text(stringResource(if (choice == 0) R.string.goal_off else R.string.goal_minutes, choice))
-                },
-                leadingIcon = if (selected) {
-                    { Icon(Icons.Filled.Check, contentDescription = null) }
-                } else {
-                    null
+                label = { Text(label(choice)) },
+                leadingIcon = when {
+                    selected -> { { Icon(Icons.Filled.Check, contentDescription = null) } }
+                    dot != null -> { { Box(Modifier.size(14.dp).background(dot(choice), CircleShape)) } }
+                    else -> null
                 },
                 border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) colors.primary else colors.outline)
             )

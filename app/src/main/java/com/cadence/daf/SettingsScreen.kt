@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
@@ -80,6 +81,9 @@ fun SettingsScreen(viewModel: MainViewModel, onBack: () -> Unit, openDebug: () -
             MinuteChips(SESSION_LIMIT_CHOICES, settings.sessionLimitMin, viewModel::setSessionLimitMin)
         }
         SectionCard { ReminderSection(settings, viewModel) }
+
+        GroupTitle(R.string.group_widgets)
+        SectionCard { WidgetSection(settings.widgetStyle, viewModel::setWidgetStyle) }
 
         GroupTitle(R.string.about)
         SectionCard {
@@ -276,6 +280,37 @@ private fun FadeSection(settings: Settings, viewModel: MainViewModel) {
         Text(stringResource(if (paused) R.string.fade_resume else R.string.fade_pause))
     }
     TextButton(onClick = viewModel::stepFadeBack) { Text(stringResource(R.string.fade_back)) }
+}
+
+/** Colors of the home screen widgets; they redraw as soon as something changes. */
+@Composable
+private fun WidgetSection(style: WidgetStyle, onChange: (WidgetStyle) -> Unit) {
+    Text(stringResource(R.string.widget_appearance), style = MaterialTheme.typography.titleMedium)
+    Caption(R.string.widget_appearance_caption)
+    Text(stringResource(R.string.widget_accent))
+    ChoiceChips(
+        WidgetAccent.entries,
+        WidgetAccent.entries[style.accent],
+        { stringResource(it.label) },
+        { onChange(style.copy(accent = it.ordinal)) },
+        dot = { Color(it.argb(style.light)) }
+    )
+    Text(stringResource(R.string.widget_background_title))
+    ChoiceChips(
+        listOf(false, true),
+        style.light,
+        { stringResource(if (it) R.string.widget_light else R.string.widget_dark) },
+        { onChange(style.copy(light = it)) }
+    )
+    val label = stringResource(R.string.widget_opacity, style.opacity)
+    Text(label)
+    CadenceSlider(
+        value = style.opacity.toFloat(),
+        onValueChange = { onChange(style.copy(opacity = it.roundToInt())) },
+        valueRange = 0f..100f,
+        steps = 9,
+        modifier = Modifier.semantics { contentDescription = label }
+    )
 }
 
 private fun MicPreset.captionRes(): Int = when (this) {

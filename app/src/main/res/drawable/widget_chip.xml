@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The inset keeps a 48 dp touch target around a smaller pill. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetTop="8dp"
+    android:insetBottom="8dp">
+    <shape>
+        <solid android:color="#33889999" />
+        <corners android:radius="16dp" />
+        <padding android:left="12dp" android:right="12dp" />
+    </shape>
+</inset>

@@ -67,6 +67,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 .collect { (enabled, minute) -> Reminders.schedule(application, enabled, minute) }
         }
         viewModelScope.launch {
+            // The settings the home screen widgets show; the first value also redraws them on app start.
+            repository.settings
+                .map { listOf(it.delayMs, it.dailyGoalMin, it.fadeEnabled, it.disclaimerAccepted, it.widgetStyle) }
+                .distinctUntilChanged()
+                .collect { Widgets.refresh(application) }
+        }
+        viewModelScope.launch {
             // Refreshes on start/stop and every 15 s, so the day rolls over at midnight.
             AudioService.running.collectLatest {
                 while (true) {
@@ -157,6 +164,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch { repository.setNoiseReduction(enabled) }
     }
 
+    fun setWidgetStyle(style: WidgetStyle) {
+        viewModelScope.launch { repository.setWidgetStyle(style) }
+    }
+
     fun setMaskingEnabled(enabled: Boolean) {
         viewModelScope.launch { repository.setMaskingEnabled(enabled) }
     }
@@ -185,6 +196,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             practiceLog.clear()
             refreshPractice()
+            Widgets.refresh(getApplication())
         }
     }
 
